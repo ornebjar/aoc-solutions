@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class Year2022 extends Aoc {
 
     public Year2022() {
@@ -184,15 +185,14 @@ public class Year2022 extends Aoc {
         List<String> start = input.get(0).input.lines().toList();
         int startHeight = start.size() - 1;
         int n = (start.get(startHeight).length() + 1) / 4;
-        Stack<String>[] stacks = new Stack[n];
+        var stacks = Stream.generate(() -> new Stack<String>()).limit(n).toList();
 
         for (int k = 0; k < n; k++) {
-            stacks[k] = new Stack<>();
             var index = k * 4 + 1;
             for (int i = startHeight - 1; i >= 0; i--) {
                 char c = start.get(i).charAt(index);
                 if (c != ' ') {
-                    stacks[k].push(String.valueOf(c));
+                    stacks.get(k).push(String.valueOf(c));
                 }
             }
         }
@@ -203,30 +203,29 @@ public class Year2022 extends Aoc {
             int from = Integer.parseInt(parts[3]) - 1;
             int to = Integer.parseInt(parts[5]) - 1;
 
-            Stream.generate(() -> stacks[from].pop())
+            Stream.generate(() -> stacks.get(from).pop())
                     .limit(count)
-                    .forEach(c -> stacks[to].push(c));
+                    .forEach(c -> stacks.get(to).push(c));
         });
 
-        return Arrays.stream(stacks)
+        return stacks.stream()
                 .map(Stack::peek)
                 .collect(Collectors.joining());
     }
 
     public static String day5p2(List<Day5> input) {
         System.out.println(input.get(0).input);
-        List<String> start = input.get(0).input.lines().toList();
+        var start = input.get(0).input.lines().toList();
         int startHeight = start.size() - 1;
         int n = (start.get(startHeight).length() + 1) / 4;
-        Stack<String>[] stacks = new Stack[n];
+        var stacks = Stream.generate(() -> new Stack<String>()).limit(n).toList();
 
         for (int k = 0; k < n; k++) {
-            stacks[k] = new Stack<>();
             var index = k * 4 + 1;
             for (int i = startHeight - 1; i >= 0; i--) {
                 char c = start.get(i).charAt(index);
                 if (c != ' ') {
-                    stacks[k].push(String.valueOf(c));
+                    stacks.get(k).push(String.valueOf(c));
                 }
             }
         }
@@ -237,14 +236,14 @@ public class Year2022 extends Aoc {
             int from = Integer.parseInt(parts[3]) - 1;
             int to = Integer.parseInt(parts[5]) - 1;
 
-            Stream.generate(() -> stacks[from].pop())
+            Stream.generate(() -> stacks.get(from).pop())
                     .limit(count)
                     .collect(Collectors.toCollection(ArrayDeque::new))
                     .descendingIterator()
-                    .forEachRemaining(c -> stacks[to].push(c));
+                    .forEachRemaining(c -> stacks.get(to).push(c));
         });
 
-        return Arrays.stream(stacks)
+        return stacks.stream()
                 .map(Stack::peek)
                 .collect(Collectors.joining());
     }
@@ -460,6 +459,7 @@ public class Year2022 extends Aoc {
         return day9(input, 2);
     }
 
+
     public static int day9p2(List<Day9> input) {
         return day9(input, 10);
     }
@@ -501,6 +501,6 @@ public class Year2022 extends Aoc {
     }
 
     public static void main(String[] args) {
-        new Year2022().invoke(9, 1);
+        new Year2022().invoke(5, 1);
     }
 }

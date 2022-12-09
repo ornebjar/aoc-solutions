@@ -53,16 +53,16 @@ public class Aoc {
                 Class<?> dayRecord = Class.forName(this.getClass().getName() + "$" + dayRecordName);
                 Constructor<?> rowConstructor = dayRecord.getDeclaredConstructors()[0];
                 String delim = staticField(dayRecord, "delim").orElse(" ");
-                Optional<String> splitter = staticField(dayRecord, "splitter");
+                String splitter = staticField(dayRecord, "splitter").orElse(null);
                 input = readInput(day, splitter)
                         .map(line -> convertLine(delim, rowConstructor, line))
                         .toList();
             } else if (methodParam == String[].class) {
-                input = readInput(day, Optional.empty()).toArray(String[]::new);
+                input = readInput(day, null).toArray(String[]::new);
             } else if (dayRecordName.equals(methodParam.getName())) {
                 Class<?> dayRecord = Class.forName(this.getClass().getName() + "$" + dayRecordName);
                 Constructor<?> rowConstructor = dayRecord.getDeclaredConstructors()[0];
-                Optional<String> splitter = staticField(dayRecord, "splitter");
+                String splitter = staticField(dayRecord, "splitter").orElse(null);
                 input = rowConstructor.newInstance(readInput(day, splitter));
             } else {
                 throw new IllegalArgumentException("Cannot handle parameter with type " + methodParam);
@@ -115,7 +115,7 @@ public class Aoc {
         return null;
     }
 
-    private Stream<String> readInput(int day, Optional<String> splitter) {
+    private Stream<String> readInput(int day, String splitter) {
         Path inputPath = Path.of("/temp/aoc/%s/input%s.csv".formatted(year, day));
         try {
             if (!Files.exists(inputPath)) {
@@ -128,8 +128,8 @@ public class Aoc {
                 Files.write(inputPath, download);
             }
             String s = Files.readString(inputPath);
-            if (splitter.isPresent()) {
-                return Arrays.stream(s.split(splitter.get(), -1));
+            if (splitter != null) {
+                return Arrays.stream(s.split(splitter, -1));
             }
             return s.lines();
         } catch (IOException e) {
