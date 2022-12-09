@@ -3,7 +3,6 @@ package se.pabi.aoc;
 import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -33,28 +32,47 @@ public class Aoc {
 
     public void invoke(int day, int part) {
         try {
+
+            String methodName = "day" + day + "p" + part;
+            List<Method> methods = Arrays.stream(this.getClass().getMethods())
+                    .filter(m -> methodName.equals(m.getName()))
+                    .toList();
+
+            if (methods.size() > 1) {
+                throw new IllegalArgumentException("Mutiple methods found with name %s.".formatted(methodName));
+            }
+
+            Method method = methods.stream().findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Method %s is missing.".formatted(methodName)));
+
             Object input;
-            Method method;
-            try {
-                method = this.getClass().getMethod("day" + day + "p" + part, List.class);
-                Class<?> dayRecord = Class.forName(this.getClass().getName() + "$Day" + day);
+            Class<?> methodParam = method.getParameterTypes()[0];
+            String dayRecordName = "Day" + day;
+
+            if (methodParam == List.class) {
+                Class<?> dayRecord = Class.forName(this.getClass().getName() + "$" + dayRecordName);
                 Constructor<?> rowConstructor = dayRecord.getDeclaredConstructors()[0];
-                Field[] fields = dayRecord.getDeclaredFields();
                 String delim = staticField(dayRecord, "delim").orElse(" ");
                 Optional<String> splitter = staticField(dayRecord, "splitter");
                 input = readInput(day, splitter)
                         .map(line -> convertLine(delim, rowConstructor, line))
-                        .collect(Collectors.toList());
-            } catch (NoSuchMethodException e) {
-                method = this.getClass().getMethod("day" + day + "p" + part, String[].class);
+                        .toList();
+            } else if (methodParam == String[].class) {
                 input = readInput(day, Optional.empty()).toArray(String[]::new);
+            } else if (dayRecordName.equals(methodParam.getName())) {
+                Class<?> dayRecord = Class.forName(this.getClass().getName() + "$" + dayRecordName);
+                Constructor<?> rowConstructor = dayRecord.getDeclaredConstructors()[0];
+                Optional<String> splitter = staticField(dayRecord, "splitter");
+                input = rowConstructor.newInstance(readInput(day, splitter));
+            } else {
+                throw new IllegalArgumentException("Cannot handle parameter with type " + methodParam);
             }
+
             long startTime = System.currentTimeMillis();
             Object result = method.invoke(null, input);
             long timeTaken = System.currentTimeMillis() - startTime;
             System.out.printf("Result: %s Taken: %sms%n", result, timeTaken);
-        } catch (NoSuchMethodException | ClassNotFoundException |
-                IllegalAccessException | InvocationTargetException e) {
+        } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
             throw new IllegalStateException(e);
         }
     }
