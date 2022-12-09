@@ -39,7 +39,7 @@ public class Aoc {
                     .toList();
 
             if (methods.size() > 1) {
-                throw new IllegalArgumentException("Mutiple methods found with name %s.".formatted(methodName));
+                throw new IllegalArgumentException("Multiple methods found with name %s.".formatted(methodName));
             }
 
             Method method = methods.stream().findFirst()
