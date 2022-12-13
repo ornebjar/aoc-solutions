@@ -95,7 +95,6 @@ public class Aoc {
         try {
             String[] parts = line.split(delim);
             Object[] arguments = new Object[parts.length];
-
             Class<?>[] types = rowConstructor.getParameterTypes();
             for (int i = 0; i < parts.length; i++) {
                 arguments[i] = convert(types[i], parts[i]);

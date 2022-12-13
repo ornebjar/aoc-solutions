@@ -500,7 +500,60 @@ public class Year2022 extends Aoc {
         return visited.size();
     }
 
+    public record Day10(Cmd cmd, int value) {
+        static String delim = "¤¤¤¤";
+        public Day10(String line) {
+            this(Cmd.valueOf(line.split(" ")[0]), line.split(" ").length == 1 ? 0 : Integer.parseInt(line.split(" ")[1]));
+        }
+        enum Cmd {addx, noop}
+    }
+
+    public static int day10p1(List<Day10> inputs) {
+        int x = 1;
+        int sum = 0;
+        int cycle = 0;
+        int next = 20;
+        for (Day10 input : inputs) {
+            switch (input.cmd) {
+                case noop -> cycle++;
+                case addx -> cycle += 2;
+            }
+
+            if (cycle >= next) {
+                sum += x * next;
+                next += 40;
+            }
+
+            if (input.cmd == Day10.Cmd.addx) {
+                x += input.value;
+            }
+        }
+        return sum;
+    }
+
+
+    public static int day10p2(List<Day10> inputs) {
+        int x = 1;
+        int cycle = 0;
+        String[] rows = new String[] {"", "", "", "", "", ""};
+        for (Day10 input : inputs) {
+
+            rows[cycle / 40] += (cycle%40) >= x-1 && (cycle%40) <= x+1 ? "#" : ".";
+            cycle++;
+
+            if (input.cmd == Day10.Cmd.addx) {
+                rows[cycle / 40] += (cycle%40) >= x-1 && (cycle%40) <= x+1 ? "#" : ".";
+                cycle++;
+
+                x += input.value;
+            }
+        }
+        Arrays.stream(rows).forEach(System.out::println);
+        return 0;
+    }
+
+
     public static void main(String[] args) {
-        new Year2022().invoke(5, 1);
+        new Year2022().invoke(10, 2);
     }
 }
