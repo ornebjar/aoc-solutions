@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Day13 extends AdventOfCode {
+public class Day13 extends AdventOfCode<Day13.Pair[]> {
 
     interface Ob extends Comparable<Ob> {
     }
@@ -90,13 +90,10 @@ public class Day13 extends AdventOfCode {
             right.scan(pair.get(1), 0);
         }
     }
-
-    Pair[] pairs;
-
     @Override
-    public void input(String input) {
+    public Pair[] input(String input) {
         String[] pairs = input.split("\n\n");
-        this.pairs = Arrays.stream(pairs)
+        return Arrays.stream(pairs)
                 .map(String::lines)
                 .map(Stream::toList)
                 .map(Pair::new)
@@ -104,7 +101,7 @@ public class Day13 extends AdventOfCode {
     }
 
     @Override
-    public String part1() {
+    public String part1(Pair[] pairs) {
         int sum = 0;
         for (int i = 0; i < pairs.length; i++) {
             Pair pair = pairs[i];
@@ -116,7 +113,7 @@ public class Day13 extends AdventOfCode {
     }
 
     @Override
-    public String part2() {
+    public String part2(Pair[] pairs) {
         Pair dividers = new Pair(List.of("[[2]]", "[[6]]"));
         Li left = dividers.left;
         Li right = dividers.right;

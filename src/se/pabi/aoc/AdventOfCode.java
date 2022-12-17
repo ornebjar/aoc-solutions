@@ -10,25 +10,25 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public abstract class AdventOfCode {
+public abstract class AdventOfCode<T> {
 
     public AdventOfCode() {
         Package pkg = getClass().getPackage();
         String year = pkg.getName().replaceAll("\\D+", "");
         String day = getClass().getSimpleName().replaceAll("\\D+", "");
-        input(readInput(year, day));
-        System.out.println("Part 1: " + part1());
-        input(readInput(year, day));
-        System.out.println("Part 2: " + part2());
+        T i1 = input(readInput(year, day));
+        System.out.println("Part 1: " + part1(i1));
+        T i2 = input(readInput(year, day));
+        System.out.println("Part 2: " + part2(i2));
     }
 
-    abstract public void input(String input);
+    abstract public T input(String input);
 
-    public String part1() {
+    public Object part1(T input) {
         return null;
     }
 
-    public String part2() {
+    public Object part2(T input) {
         return null;
     }
 

@@ -11,7 +11,7 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Day11 extends AdventOfCode {
+public class Day11 extends AdventOfCode<Day11.Monkey[]> {
 
     static final class Monkey {
         final List<BigInteger> items;
@@ -53,15 +53,13 @@ public class Day11 extends AdventOfCode {
         }
     }
 
-    Monkey[] monkeys;
-
-    public void input(String input) {
-        monkeys = Arrays.stream(input.split("\r\n\r\n")).map(Monkey::new).toArray(Monkey[]::new);
+    public Monkey[] input(String input) {
+        return Arrays.stream(input.split("\r\n\r\n")).map(Monkey::new).toArray(Monkey[]::new);
     }
 
     public static final BigInteger THREE = BigInteger.valueOf(3);
 
-    public String part1() {
+    public String part1(Monkey[] monkeys) {
         int[] interactions = new int[monkeys.length];
         for (int j = 0; j < 20; j++) {
             for (int m = 0; m < monkeys.length; m++) {
@@ -78,7 +76,7 @@ public class Day11 extends AdventOfCode {
         return String.valueOf(interactions[monkeys.length - 2] * interactions[monkeys.length - 1]);
     }
 
-    public String part2() {
+    public String part2(Monkey[] monkeys) {
         BigInteger mod = Arrays.stream(monkeys).map(m -> m.divisor).reduce(BigInteger.ONE, BigInteger::multiply);
         long[] interactions = new long[monkeys.length];
         for (int j = 0; j < 10000; j++) {

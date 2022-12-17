@@ -6,9 +6,12 @@ import java.util.*;
 
 import static java.lang.Math.abs;
 
-public class Day12 extends AdventOfCode {
+public class Day12 extends AdventOfCode<Day12.River> {
 
-    static final class Pos {
+    record River(Pos[][] map, int w, int h, Pos start, Pos goal) {
+    }
+
+    class Pos {
         private final int x;
         private final int y;
         private final char height;
@@ -21,7 +24,7 @@ public class Day12 extends AdventOfCode {
             this.n = n;
         }
 
-        Pos(int x, int y, char height) {
+        public Pos(int x, int y, char height) {
             this(x, y, switch (height) {
                 case 'S' -> 'a';
                 case 'E' -> 'z';
@@ -29,9 +32,9 @@ public class Day12 extends AdventOfCode {
             }, new ArrayList<>());
         }
 
-        private void addN(int nx, int ny) {
-            if (nx >= 0 && nx < w &&
-                    ny >= 0 && ny < h &&
+        private void addN(int nx, int ny, Pos[][] map) {
+            if (ny >= 0 && ny < map.length &&
+                    nx >= 0 && nx < map[ny].length &&
                     height + 1 >= map[ny][nx].height) {
                 n.add(map[ny][nx]);
             }
@@ -59,19 +62,18 @@ public class Day12 extends AdventOfCode {
                     "height=" + height + ", " +
                     "n=" + n.size() + ']';
         }
-
     }
 
-    static Pos[][] map;
-    static int w, h;
-    static Pos start, goal;
+
 
     @Override
-    public void input(String input) {
+    public River input(String input) {
         var lines = input.lines().toArray(String[]::new);
-        h = lines.length;
-        w = lines[0].length();
-        map = new Pos[h][w];
+        int h = lines.length;
+        int w = lines[0].length();
+        var map = new Pos[h][w];
+        Pos start = null;
+        Pos goal = null;
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 char c = lines[y].charAt(x);
@@ -84,50 +86,51 @@ public class Day12 extends AdventOfCode {
         }
         for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map[y].length; x++) {
-                map[y][x].addN(x + 1, y);
-                map[y][x].addN(x - 1, y);
-                map[y][x].addN(x, y + 1);
-                map[y][x].addN(x, y - 1);
+                map[y][x].addN(x + 1, y, map);
+                map[y][x].addN(x - 1, y, map);
+                map[y][x].addN(x, y + 1, map);
+                map[y][x].addN(x, y - 1, map);
             }
         }
+        return new River(map, w, h, start, goal);
     }
 
     @Override
-    public String part1() {
-        return String.valueOf(shortestPath(start, goal));
+    public String part1(River river) {
+        return String.valueOf(shortestPath(river, river.start));
     }
 
     @Override
-    public String part2() {
-        return "" + Arrays.stream(map)
+    public String part2(River river) {
+        return "" + Arrays.stream(river.map)
                 .flatMap(Arrays::stream)
                 .filter(p -> p.height == 'a')
-                .mapToInt(p -> shortestPath(p, goal))
+                .mapToInt(p -> shortestPath(river, p))
                 .min()
                 .orElse(-1);
     }
 
-    private int shortestPath(Pos start, Pos goal) {
-        int[][] fScore = new int[h][w];
-        int[][] gScore = new int[h][w];
-        for (int y = 0; y < h; y++) {
+    private int shortestPath(River river, Pos start) {
+        int[][] fScore = new int[river.h][river.w];
+        int[][] gScore = new int[river.h][river.w];
+        for (int y = 0; y < river.h; y++) {
             Arrays.fill(fScore[y], Integer.MAX_VALUE);
             Arrays.fill(gScore[y], Integer.MAX_VALUE);
         }
         var open = new PriorityQueue<Pos>(Comparator.comparingInt(p -> fScore[p.y][p.x]));
         open.add(start);
         gScore[start.y][start.x] = 0;
-        fScore[start.y][start.x] = abs(start.x - goal.x) + abs(start.y - goal.y);
+        fScore[start.y][start.x] = abs(start.x - river.goal.x) + abs(start.y - river.goal.y);
         Pos current;
         while ((current = open.poll()) != null) {
-            if (current == goal) {
+            if (current == river.goal) {
                 return gScore[current.y][current.x];
             }
             for (Pos n : current.n) {
                 int tentative_gScore = gScore[current.y][current.x] + 1;
                 if (tentative_gScore < gScore[n.y][n.x]) {
                     gScore[n.y][n.x] = tentative_gScore;
-                    fScore[n.y][n.x] = tentative_gScore + abs(goal.x - n.x) + abs(goal.y - n.y);
+                    fScore[n.y][n.x] = tentative_gScore + abs(river.goal.x - n.x) + abs(river.goal.y - n.y);
                     if (!open.contains(n)) {
                         open.add(n);
                     }
