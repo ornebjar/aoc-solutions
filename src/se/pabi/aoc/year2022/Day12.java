@@ -11,7 +11,7 @@ public class Day12 extends AdventOfCode<Day12.River> {
     record River(Pos[][] map, int w, int h, Pos start, Pos goal) {
     }
 
-    class Pos {
+    static class Pos {
         private final int x;
         private final int y;
         private final char height;
