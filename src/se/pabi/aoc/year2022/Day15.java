@@ -1,6 +1,7 @@
 package se.pabi.aoc.year2022;
 
 import se.pabi.aoc.AdventOfCode;
+import se.pabi.aoc.Helper;
 
 import java.awt.*;
 import java.math.BigInteger;
@@ -43,15 +44,9 @@ public class Day15 extends AdventOfCode<Stream<Day15.Link>> {
     public Stream<Link> input(String input) {
         Pattern pattern = Pattern.compile("^Sensor at x=(.*), y=(.*): closest beacon is at x=(.*), y=(.*)$");
         return input.lines()
-                .map(pattern::matcher)
-                .map(m -> {
-                    if (!m.matches()) {
-                        throw new IllegalArgumentException("Input is broken");
-                    }
-                    return new Link(
-                            new Point(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))),
-                            new Point(Integer.parseInt(m.group(3)), Integer.parseInt(m.group(4)))
-                    );
+                .map(line -> {
+                    int[] v = Helper.groups(line, pattern).mapToInt(Integer::parseInt).toArray();
+                    return new Link(new Point(v[0], v[1]), new Point(v[2], v[3]));
                 });
     }
 
