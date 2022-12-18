@@ -16,10 +16,18 @@ public abstract class AdventOfCode<T> {
         Package pkg = getClass().getPackage();
         String year = pkg.getName().replaceAll("\\D+", "");
         String day = getClass().getSimpleName().replaceAll("\\D+", "");
+
         T i1 = input(readInput(year, day));
-        System.out.println("Part 1: " + part1(i1));
+        long startTime = System.currentTimeMillis();
+        Object r1 = part1(i1);
+        long timeTaken = System.currentTimeMillis() - startTime;
+        System.out.printf("Part 1 in %sms: %s%n", timeTaken, r1);
+
         T i2 = input(readInput(year, day));
-        System.out.println("Part 2: " + part2(i2));
+        startTime = System.currentTimeMillis();
+        Object r2 = part2(i2);
+        timeTaken = System.currentTimeMillis() - startTime;
+        System.out.printf("Part 2 in %sms: %s%n", timeTaken, r2);
     }
 
     abstract public T input(String input);
