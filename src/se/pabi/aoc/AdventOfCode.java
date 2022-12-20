@@ -9,6 +9,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public abstract class AdventOfCode<T> {
 
@@ -21,13 +24,22 @@ public abstract class AdventOfCode<T> {
         long startTime = System.currentTimeMillis();
         Object r1 = part1(i1);
         long timeTaken = System.currentTimeMillis() - startTime;
-        System.out.printf("Part 1 in %sms: %s%n", timeTaken, r1);
+        System.out.printf("Part 1 in %s: %s%n", millisToString(timeTaken), r1);
 
         T i2 = input(readInput(year, day));
         startTime = System.currentTimeMillis();
         Object r2 = part2(i2);
         timeTaken = System.currentTimeMillis() - startTime;
-        System.out.printf("Part 2 in %sms: %s%n", timeTaken, r2);
+        System.out.printf("Part 2 in %s: %s%n", millisToString(timeTaken), r2);
+    }
+
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(
+            "0.00",
+            new DecimalFormatSymbols(Locale.US));
+    private static String millisToString(long ms) {
+        return ms >= 1000
+                ? DECIMAL_FORMAT.format((double) ms / 1000) + "s"
+                : ms + "ms";
     }
 
     abstract public T input(String input);

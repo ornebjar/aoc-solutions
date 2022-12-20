@@ -6,7 +6,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Helper {
-
     private Helper() {}
 
     public static Stream<String> groups(String line, Pattern pattern) {
@@ -17,4 +16,5 @@ public class Helper {
         return IntStream.rangeClosed(1, matcher.groupCount())
                 .mapToObj(matcher::group);
     }
+
 }
