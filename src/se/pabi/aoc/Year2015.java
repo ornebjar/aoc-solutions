@@ -1,5 +1,7 @@
 package se.pabi.aoc;
 
+import se.pabi.aoc.base.Aoc;
+
 import java.awt.*;
 import java.util.HashSet;
 import java.util.List;

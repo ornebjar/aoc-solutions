@@ -1,7 +1,7 @@
 package se.pabi.aoc.year2022;
 
-import se.pabi.aoc.AdventOfCode;
-import se.pabi.aoc.Helper;
+import se.pabi.aoc.base.AdventOfCode;
+import se.pabi.aoc.util.Util;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -43,7 +43,7 @@ public class Day16 extends AdventOfCode<Day16.Valve[]> {
         Pattern pattern = Pattern.compile("^Valve (.*) has flow rate=(.*); tunnels? leads? to valves? (.*)$");
         List<String[]> neighbours = new ArrayList<>();
         Valve[] valves = input.lines().map(line -> {
-            String[] groups = Helper.groups(line, pattern).toArray(String[]::new);
+            String[] groups = Util.groups(line, pattern).toArray(String[]::new);
             neighbours.add(groups[2].split(", "));
             return new Valve(groups[0], Integer.parseInt(groups[1]));
         }).toArray(Valve[]::new);

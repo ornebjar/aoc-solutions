@@ -1,6 +1,6 @@
 package se.pabi.aoc.year2022;
 
-import se.pabi.aoc.AdventOfCode;
+import se.pabi.aoc.base.AdventOfCode;
 
 import java.math.BigInteger;
 import java.util.Arrays;

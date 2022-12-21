@@ -1,7 +1,7 @@
 package se.pabi.aoc.year2022;
 
-import se.pabi.aoc.AdventOfCode;
-import se.pabi.aoc.Helper;
+import se.pabi.aoc.base.AdventOfCode;
+import se.pabi.aoc.util.Util;
 
 import java.awt.*;
 import java.math.BigInteger;
@@ -45,7 +45,7 @@ public class Day15 extends AdventOfCode<Stream<Day15.Link>> {
         Pattern pattern = Pattern.compile("^Sensor at x=(.*), y=(.*): closest beacon is at x=(.*), y=(.*)$");
         return input.lines()
                 .map(line -> {
-                    int[] v = Helper.groups(line, pattern).mapToInt(Integer::parseInt).toArray();
+                    int[] v = Util.groups(line, pattern).mapToInt(Integer::parseInt).toArray();
                     return new Link(new Point(v[0], v[1]), new Point(v[2], v[3]));
                 });
     }

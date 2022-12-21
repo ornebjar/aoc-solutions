@@ -1,4 +1,4 @@
-package se.pabi.aoc;
+package se.pabi.aoc.base;
 
 import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
