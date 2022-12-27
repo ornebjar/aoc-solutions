@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 public class Day16 extends AdventOfCode<Day16.Valve[]> {
 
-    class Valve {
+    static class Valve {
         final String name;
         int rate;
 
@@ -55,8 +55,7 @@ public class Day16 extends AdventOfCode<Day16.Valve[]> {
                     .forEach(valve -> v.neighbours.put(valve, 1));
         }
         for (Valve valve : valves) {
-            LinkedList<Valve> open = new LinkedList();
-            open.addAll(valve.neighbours.keySet());
+            LinkedList<Valve> open = new LinkedList(valve.neighbours.keySet());
             int dist = 1;
             Valve next;
             while (!open.isEmpty()) {
@@ -104,10 +103,9 @@ public class Day16 extends AdventOfCode<Day16.Valve[]> {
     @Override
     public Object part2(Valve[] input) {
         Valve start = Arrays.stream(input).filter(v -> "AA".equals(v.name)).findFirst().orElseThrow();
-        Valve elephant = start;
         LinkedList<Valve> paths = start.neighbours.keySet().stream().filter(v -> v.rate > 0).collect(Collectors.toCollection(LinkedList::new));
 
-        return calc2(start, elephant, paths, 26, 26);
+        return calc2(start, start, paths, 26, 26);
     }
 
     private int calc2(Valve current1, Valve current2, LinkedList<Valve> paths, int time1, int time2) {
