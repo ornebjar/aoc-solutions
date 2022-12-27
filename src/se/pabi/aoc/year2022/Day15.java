@@ -99,8 +99,4 @@ public class Day15 extends AdventOfCode<Stream<Day15.Link>> {
         return 0;
     }
 
-    public static void main(String[] args) {
-        new Day15();
-    }
-
 }

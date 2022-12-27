@@ -139,8 +139,4 @@ public class Day12 extends AdventOfCode<Day12.River> {
         }
         return Integer.MAX_VALUE;
     }
-
-    public static void main(String[] args) {
-        new Day12();
-    }
 }

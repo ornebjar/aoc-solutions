@@ -136,7 +136,4 @@ public class Day18 extends AdventOfCode<Set<Day18.Cube>> {
         return part1(lava);
     }
 
-    public static void main(String[] args) {
-        new Day18();
-    }
 }

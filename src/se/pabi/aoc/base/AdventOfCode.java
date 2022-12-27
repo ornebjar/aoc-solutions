@@ -2,6 +2,7 @@ package se.pabi.aoc.base;
 
 import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -36,6 +37,7 @@ public abstract class AdventOfCode<T> {
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(
             "0.00",
             new DecimalFormatSymbols(Locale.US));
+
     private static String millisToString(long ms) {
         return ms >= 1000
                 ? DECIMAL_FORMAT.format((double) ms / 1000) + "s"
@@ -92,6 +94,19 @@ public abstract class AdventOfCode<T> {
             ).body();
         } catch (URISyntaxException | IOException | InterruptedException e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            String command = System.getProperty("sun.java.command");
+            String[] commandArgs = command.split(" ");
+            String className = commandArgs[0];
+            var dayClass = Class.forName(className);
+            dayClass.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                 IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException(e);
         }
     }
 }

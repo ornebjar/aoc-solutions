@@ -114,7 +114,4 @@ public class Day20 extends AdventOfCode<IntStream> {
                 .reduce(BigInteger.ZERO, BigInteger::add);
     }
 
-    public static void main(String[] args) {
-        new Day20();
-    }
 }

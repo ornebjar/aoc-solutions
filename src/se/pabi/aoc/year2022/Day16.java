@@ -134,7 +134,4 @@ public class Day16 extends AdventOfCode<Day16.Valve[]> {
         return moveScore + intStream.max().orElse(0);
     }
 
-    public static void main(String[] args) {
-        new Day16();
-    }
 }

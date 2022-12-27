@@ -109,8 +109,4 @@ public class Day14 extends AdventOfCode<Day14.Cave> {
 
         return count;
     }
-
-    public static void main(String[] args) {
-        new Day14();
-    }
 }

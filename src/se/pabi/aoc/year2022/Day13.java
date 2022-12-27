@@ -125,8 +125,4 @@ public class Day13 extends AdventOfCode<Day13.Pair[]> {
         int second = sorted.indexOf(right) + 1;
         return String.valueOf(first * second);
     }
-
-    public static void main(String[] args) {
-        new Day13();
-    }
 }

@@ -157,7 +157,4 @@ public class Day19 extends AdventOfCode<Stream<Day19.Blueprint>> {
         return score;
     }
 
-    public static void main(String[] args) {
-        new Day19();
-    }
 }

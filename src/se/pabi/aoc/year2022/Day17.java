@@ -184,7 +184,4 @@ public class Day17 extends AdventOfCode<Day17.Input> {
                 .reduce(height, Integer::max);
     }
 
-    public static void main(String[] args) {
-        new Day17();
-    }
 }

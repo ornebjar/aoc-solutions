@@ -93,8 +93,4 @@ public class Day11 extends AdventOfCode<Day11.Monkey[]> {
         Arrays.sort(interactions);
         return String.valueOf(interactions[monkeys.length - 2] * interactions[monkeys.length - 1]);
     }
-
-    public static void main(String[] args) {
-        new Day11();
-    }
 }
