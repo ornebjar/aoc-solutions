@@ -97,16 +97,18 @@ public abstract class AdventOfCode<T> {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Throwable {
         try {
             String command = System.getProperty("sun.java.command");
             String[] commandArgs = command.split(" ");
             String className = commandArgs[0];
             var dayClass = Class.forName(className);
             dayClass.getDeclaredConstructor().newInstance();
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+        } catch (ClassNotFoundException | NoSuchMethodException |
                  IllegalAccessException | InstantiationException e) {
             throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
         }
     }
 }
