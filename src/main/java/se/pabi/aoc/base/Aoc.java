@@ -115,7 +115,7 @@ public class Aoc {
     }
 
     private Stream<String> readInput(int day, String splitter) {
-        Path inputPath = Path.of("/temp/aoc/%s/input%s.csv".formatted(year, day));
+        Path inputPath = Path.of("data/%s/input%s.csv".formatted(year, day));
         try {
             if (!Files.exists(inputPath)) {
                 List<String> download = downloadInput(day).collect(Collectors.toList());

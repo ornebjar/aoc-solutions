@@ -57,7 +57,7 @@ public abstract class AdventOfCode<T> {
     private static final String URL = "https://adventofcode.com/%s/day/%s/input";
 
     private String readInput(String year, String day) {
-        Path inputPath = Path.of("/temp/aoc/%s/input%s.csv".formatted(year, day));
+        Path inputPath = Path.of("data/%s/input%s.csv".formatted(year, day));
         try {
             if (!Files.exists(inputPath)) {
                 String download = downloadInput(year, day);
