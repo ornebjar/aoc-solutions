@@ -56,17 +56,15 @@ public abstract class AdventOfCode<T> {
 
     private static final String URL = "https://adventofcode.com/%s/day/%s/input";
 
-    private static final String COOKIE = "_ga=GA1.2.1410517933.1650308922;session=" +
-            "53616c7465645f5fbd477ab32bc059042914783489e6fce" + "cac593a9e513d7705" +
-            "85f30e144df505f6612d282b57d9beb45a000636eee431c349a3abf158d4eeee";
-
     private String readInput(String year, String day) {
         Path inputPath = Path.of("/temp/aoc/%s/input%s.csv".formatted(year, day));
         try {
             if (!Files.exists(inputPath)) {
                 String download = downloadInput(year, day);
-                if ("Puzzle inputs differ by user.  Please log in to get your puzzle input.".equals(download)) {
-                    throw new AuthenticationException("New cookie required");
+                if ("""
+                        Puzzle inputs differ by user.  Please log in to get your puzzle input.
+                        """.equals(download)) {
+                    throw new AuthenticationException("New cookie required, update data/.cookie");
                 }
                 Files.createDirectories(inputPath.getParent());
                 Files.createFile(inputPath);
@@ -82,17 +80,32 @@ public abstract class AdventOfCode<T> {
 
     private String downloadInput(String year, String day) {
         try {
+            String cookie = getCookie();
             String url = URL.formatted(year, day);
             System.err.println("Downloading file " + url);
             return HttpClient.newHttpClient().send(
                     HttpRequest.newBuilder()
                             .uri(new URI(url))
-                            .header("cookie", COOKIE)
+                            .header("cookie", cookie)
                             .GET()
                             .build(),
                     HttpResponse.BodyHandlers.ofString()
             ).body();
         } catch (URISyntaxException | IOException | InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private String getCookie() {
+        Path cookiePath = Path.of("data/.cookie");
+        try {
+            if (!Files.exists(cookiePath)) {
+                Files.createDirectories(cookiePath.getParent());
+                Files.createFile(cookiePath);
+                Files.writeString(cookiePath, "Your cookie here");
+            }
+            return Files.readString(cookiePath);
+        } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }

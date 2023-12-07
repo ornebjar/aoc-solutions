@@ -22,7 +22,7 @@ public class Aoc {
 
     private static final String URL = "https://adventofcode.com/%s/day/%s/input";
 
-    private static final String COOKIE = "Cookie here";
+    private static final String COOKIE = "Old cookie here";
 
     private final int year;
 
