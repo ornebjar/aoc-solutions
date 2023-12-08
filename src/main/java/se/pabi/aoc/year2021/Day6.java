@@ -19,7 +19,9 @@ public class Day6 extends AdventOfCode<String[]> {
         }
         for (int d = 0; d < 80; d++) {
             int birth = counts[0];
-            System.arraycopy(counts, 1, counts, 0, 8);
+            for (int i = 1; i < counts.length; i++) {
+                counts[i-1] = counts[i];
+            }
             counts[8] = birth;
             counts[6] += birth;
         }
@@ -36,7 +38,9 @@ public class Day6 extends AdventOfCode<String[]> {
         }
         for (int d = 0; d < 256; d++) {
             long birth = counts[0];
-            System.arraycopy(counts, 1, counts, 0, 8);
+            for (int i = 1; i < counts.length; i++) {
+                counts[i-1] = counts[i];
+            }
             counts[8] = birth;
             counts[6] += birth;
         }
