@@ -1,20 +1,20 @@
 package se.pabi.aoc.util;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Util {
     private Util() {}
 
     public static Stream<String> groups(String line, Pattern pattern) {
-        var matcher = pattern.matcher(line);
-        var builder = Stream.<String>builder();
-        while (matcher.find()) {
-            for (int i = 1; i < matcher.groupCount(); i++) {
-                builder.add(matcher.group(i));
-            }
+        Matcher matcher = pattern.matcher(line);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Input is broken");
         }
-        return builder.build();
+        return IntStream.rangeClosed(1, matcher.groupCount())
+                .mapToObj(matcher::group);
     }
 
     public static int gcd(int a, int b) {
