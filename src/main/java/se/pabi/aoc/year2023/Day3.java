@@ -17,7 +17,7 @@ public class Day3 extends AdventOfCode<String[]> {
         return input.lines().toArray(String[]::new);
     }
 
-    class Number {
+    static class Number {
         int value;
         boolean partNumber = false;
 
