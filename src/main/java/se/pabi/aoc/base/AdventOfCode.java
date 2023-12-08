@@ -77,11 +77,11 @@ public abstract class AdventOfCode<T> {
     }
 
     private String downloadInput(String year, String day) {
-        try {
-            String cookie = getCookie();
-            String url = URL.formatted(year, day);
-            System.err.println("Downloading file " + url);
-            return HttpClient.newHttpClient().send(
+        String cookie = getCookie();
+        String url = URL.formatted(year, day);
+        System.err.println("Downloading file " + url);
+        try (var client = HttpClient.newHttpClient()) {
+            return client.send(
                     HttpRequest.newBuilder()
                             .uri(new URI(url))
                             .header("cookie", cookie)
