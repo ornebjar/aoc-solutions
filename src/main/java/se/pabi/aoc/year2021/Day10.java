@@ -33,7 +33,7 @@ public class Day10 extends AdventOfCode<String[]> {
 
         for (String line : input) {
             LinkedList<Character> queue = new LinkedList<>();
-            for (char c : line.toCharArray()) {
+            for (Character c : line.toCharArray()) {
                 if (openClose.containsKey(c)) {
                     queue.push(openClose.get(c));
                 } else if (queue.poll() != c) {
@@ -61,7 +61,7 @@ public class Day10 extends AdventOfCode<String[]> {
         );
         List<Long> results = Arrays.stream(input).map(line -> {
             LinkedList<Character> queue = new LinkedList<>();
-            for (char c : line.toCharArray()) {
+            for (Character c : line.toCharArray()) {
                 if (openClose.containsKey(c)) {
                     queue.push(openClose.get(c));
                 } else if (queue.poll() != c) {
