@@ -61,9 +61,7 @@ public abstract class AdventOfCode<T> {
         try {
             if (!Files.exists(inputPath)) {
                 String download = downloadInput(year, day);
-                if ("""
-                        Puzzle inputs differ by user.  Please log in to get your puzzle input.
-                        """.equals(download)) {
+                if ("Puzzle inputs differ by user.  Please log in to get your puzzle input.".equals(download.trim())) {
                     throw new AuthenticationException("New cookie required, update data/.cookie");
                 }
                 Files.createDirectories(inputPath.getParent());
