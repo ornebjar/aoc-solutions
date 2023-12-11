@@ -4,6 +4,7 @@ import se.pabi.aoc.base.AdventOfCode;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Set;
 
 public class Day10 extends AdventOfCode<String[]> {
@@ -66,24 +67,33 @@ public class Day10 extends AdventOfCode<String[]> {
             seek(enclosed, loop, prev, next);
         }
 
-        prettyPrint(input, loop, enclosed);
+        prettyPrint(input, (int) Math.sqrt(new Random().nextDouble(36)), loop, enclosed);
 
         return enclosed.size();
     }
 
-    private void prettyPrint(String[] input, HashSet<Pos> loop, HashSet<Pos> enclosed) {
+    private static final char[][] STYLES = new char[][] {
+            new char[] { 'F', 'J', 'L', '7', '|', '-' },
+            new char[] { '╒', '╛', '╘', '╕', '│', '═' },
+            new char[] { '╓', '╜', '╙', '╖', '║', '─' },
+            new char[] { '╔', '╝', '╚', '╗', '║', '═' },
+            new char[] { '┌', '┘', '└', '┐', '│', '─' },
+            new char[] { '╭', '╯', '╰', '╮', '│', '─' },
+    } ;
+
+    private void prettyPrint(String[] input, int style, HashSet<Pos> loop, HashSet<Pos> enclosed) {
         for (int y = 0; y < input.length; y++) {
             for (int x = 0; x < input[y].length(); x++) {
                 var pos = new Pos(x, y);
                 if (loop.contains(pos)) {
                     switch (get(input, pos)) {
                         case 'S' -> System.out.print("S");
-                        case 'F' -> System.out.print("┌");
-                        case 'J' -> System.out.print("┘");
-                        case 'L' -> System.out.print("└");
-                        case '7' -> System.out.print("┐");
-                        case '|' -> System.out.print("│");
-                        case '-' -> System.out.print("─");
+                        case 'F' -> System.out.print(STYLES[style][0]);
+                        case 'J' -> System.out.print(STYLES[style][1]);
+                        case 'L' -> System.out.print(STYLES[style][2]);
+                        case '7' -> System.out.print(STYLES[style][3]);
+                        case '|' -> System.out.print(STYLES[style][4]);
+                        case '-' -> System.out.print(STYLES[style][5]);
                         default -> throw new RuntimeException("Unknown char: " + get(input, pos));
                     }
                 } else if (enclosed.contains(pos)) {
