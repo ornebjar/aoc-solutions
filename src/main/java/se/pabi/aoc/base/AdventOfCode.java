@@ -18,8 +18,8 @@ public abstract class AdventOfCode<T> {
 
     public AdventOfCode() {
         Package pkg = getClass().getPackage();
-        String year = pkg.getName().replaceAll("\\D+", "");
-        String day = getClass().getSimpleName().replaceAll("\\D+", "");
+        String year = extractLastNumber(pkg.getName());
+        String day = extractLastNumber(getClass().getSimpleName());
 
         T i1 = input(readInput(year, day));
         long startTime = System.currentTimeMillis();
@@ -32,6 +32,10 @@ public abstract class AdventOfCode<T> {
         Object r2 = part2(i2);
         timeTaken = System.currentTimeMillis() - startTime;
         System.out.printf("Part 2 in %s: %s%n", millisToString(timeTaken), r2);
+    }
+
+    private static String extractLastNumber(String string) {
+        return string.replaceAll("^.*?(\\d+)$", "$1");
     }
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(
