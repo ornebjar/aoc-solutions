@@ -2,10 +2,8 @@ package se.pabi.aoc.year2023;
 
 import se.pabi.aoc.base.AdventOfCode;
 
-import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Day12 extends AdventOfCode<Stream<Day12.Input>> {
@@ -15,14 +13,6 @@ public class Day12 extends AdventOfCode<Stream<Day12.Input>> {
 
     @Override
     public Stream<Input> input(String input) {
-        input = """
-                ???.### 1,1,3
-                .??..??...?##. 1,1,3
-                ?#?#?#?#?#?#?#? 1,3,1,6
-                ????.#...#... 4,1,1
-                ????.######..#####. 1,6,5
-                ?###???????? 3,2,1
-                """;
         return input.lines().map(line -> {
             String[] split = line.split(" ");
             return new Input(
@@ -34,134 +24,66 @@ public class Day12 extends AdventOfCode<Stream<Day12.Input>> {
 
     @Override
     public Object part1(Stream<Input> inputs) {
-        var counter = new AtomicInteger();
         return inputs
-                .mapToLong(input -> calc("." + input.springs + ".", input.groups, counter))
+                .mapToLong(input -> calc(input.springs(), input.groups()))
                 .sum();
     }
 
     @Override
     public Object part2(Stream<Input> inputs) {
-        var counter = new AtomicInteger();
         return inputs
-                .parallel()
-                .map(input -> {
-                    var springs = ("." + String.join("?", input.springs, input.springs,
-                            input.springs, input.springs, input.springs) + ".").replaceAll("\\.\\.+", ".");
-                    var groups = Stream.of(input.groups, input.groups, input.groups, input.groups, input.groups)
-                            .map(Arrays::stream)
-                            .flatMap(IntStream::boxed)
-                            .mapToInt(Integer::intValue)
-                            .toArray();
-                    return calc(springs, groups, counter);
-                })
-                .map(BigInteger::valueOf)
-                .reduce(BigInteger.ZERO, BigInteger::add);
+                .mapToLong(input -> calc(
+                        Stream.generate(input::springs).limit(5).collect(Collectors.joining("?")),
+                        Stream.generate(input::groups).limit(5).flatMapToInt(Arrays::stream).toArray()))
+                .sum();
     }
 
-    private static int[] findLast(String springs, int[] groups) {
-        var last = new int[groups.length];
-
-        int pos = springs.length() - 1;
-        int groupPos = groups.length - 1;
-        int count = 0;
-
-        while (pos >= 0 && groupPos >= 0) {
-            char current = springs.charAt(pos);
-            if (count == groups[groupPos]) {
-                last[groupPos] = pos + 1;
-                count = 0;
-                groupPos--;
-            } else if (current == '.') {
-                count = 0;
-            } else {
-                count++;
-            }
-            pos--;
-        }
-        return last;
-    }
-
-    private static long calc(String springs, int[] groups, AtomicInteger counter) {
-        var startTimer = System.currentTimeMillis();
-        int[] last = findLast(springs, groups);
-        long score = calc(springs, groups, last, '.', 1, 0, 0);
-        prettyPrint(springs, last, groups, System.currentTimeMillis() - startTimer, counter.incrementAndGet());
+    private static long calc(String springs, int[] groups) {
+        springs = Arrays.stream(springs.split("\\.+"))
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining("."));
+        var cache = new long[springs.length()][groups.length];
+        long score = calc(springs, 0, groups, 0, cache);
+        System.out.printf("""
+                        ╭───────�
+                        │ %s
+                        │ %s
+                        │ Count %d%n""", springs, Arrays.toString(groups), score);
         return score;
     }
 
-    private static void prettyPrint(String springs, int[] last, int[] groups, long time, int counter) {
-        var arrows = new StringBuilder();
-        var counts = new StringBuilder();
-        for (int i = 0, r = 0; i < last.length; i++) {
-            arrows.append(" ".repeat(last[i] - r)).append('^');
-            counts.append(" ".repeat(last[i] - r)).append(groups[i]);
-            r = last[i] + String.valueOf(groups[i]).length();
+    private static long calc(String springs, int p, int[] groups, int g, long[][] cache) {
+        if (p >= springs.length()) {
+            return g == groups.length ? 1 : 0;
         }
-        System.out.printf("""
-                ╭───────�
-                │ %s
-                │ %s
-                │ %s
-                │ #%d Done in %sms
-                """, springs, arrows, counts, counter, time);
+        if (g == groups.length) {
+            return springs.indexOf('#', p) == -1 ? 1 : 0;
+        }
+        if (cache[p][g] != 0) {
+            return cache[p][g] - 1;
+        }
+
+        var group = groups[g];
+        int end = p + group;
+
+        boolean canSet = (end == springs.length() || (end < springs.length() && springs.charAt(end) != '#')) &&
+                springs.indexOf('.', p, end) == -1;
+        boolean mustSet = springs.charAt(p) == '#';
+
+        long score;
+        if (canSet && mustSet) {
+            score = calc(springs, end + 1, groups, g + 1, cache);
+        } else if (canSet) {
+            score = calc(springs, end + 1, groups, g + 1, cache) +
+                    calc(springs, p + 1, groups, g, cache);
+        } else if (!mustSet) {
+            score = calc(springs, p + 1, groups, g, cache);
+        } else {
+            score = 0;
+        }
+        cache[p][g] = score + 1;
+        return score;
     }
 
-    private static long calc(String springs, int[] groups, int[] last, char prev,
-                             int springPos, int groupCount, int groupPos) {
-        if (springPos == springs.length()) {
-            if (groupPos == groups.length) {
-                return 1;
-            }
-            return 0;
-        }
-        if (groupPos < groups.length && springPos - groupCount > last[groupPos]) {
-            return 0;
-        }
 
-        char current = springs.charAt(springPos);
-
-        if (current == '?') {
-            return calcCurrent(springs, groups, last, '.', prev, springPos, groupCount, groupPos) +
-                    calcCurrent(springs, groups, last, '#', prev, springPos, groupCount, groupPos);
-        }
-        return calcCurrent(springs, groups, last, current, prev, springPos, groupCount, groupPos);
-    }
-
-    private static long calcCurrent(String springs, int[] groups, int[] last, char current, char prev,
-                                    int springPos, int groupCount, int groupPos) {
-        switch (prev) {
-            case '.' -> {
-                return switch (current) {
-                    case '.' -> calc(springs, groups, last, current, springPos + 1, 0, groupPos);
-                    case '#' -> calc(springs, groups, last, current, springPos + 1, 1, groupPos);
-                    default -> throw new RuntimeException("Unknown char: " + prev);
-                };
-            }
-            case '#' -> {
-                return switch (current) {
-                    case '.' -> {
-                        if (groupPos == groups.length) {
-                            yield 0;
-                        }
-                        if (groups[groupPos] == groupCount) {
-                            yield calc(springs, groups, last, current, springPos + 1, 0, groupPos + 1);
-                        }
-                        yield 0;
-                    }
-                    case '#' -> {
-                        if (groupPos == groups.length) {
-                            yield 0;
-                        }
-                        if (groups[groupPos] == groupCount) {
-                            yield 0;
-                        }
-                        yield calc(springs, groups, last, current, springPos + 1, groupCount + 1, groupPos);
-                    }
-                    default -> throw new RuntimeException("Unknown char: " + prev);
-                };
-            }
-            default -> throw new RuntimeException("Unknown char: " + current);
-        }
-    }
 }
