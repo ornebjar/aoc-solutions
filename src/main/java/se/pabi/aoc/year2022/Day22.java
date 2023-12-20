@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class Day22 extends AdventOfCode<Day22.Input> {
 
-    record Input(String[] map, int w, int h, int s, String instructions) {
+    public record Input(String[] map, int w, int h, int s, String instructions) {
     }
 
     public Input input(String input) {
@@ -58,10 +58,10 @@ public class Day22 extends AdventOfCode<Day22.Input> {
     private final static int[] DY = new int[]{0, 1, 0, -1};
 
     public Object part1(Input input) {
-        var actions = Util.groups(
+        var actions = Arrays.stream(Util.groups(
                 input.instructions,
                 Pattern.compile("((\\d+|[LR]))")
-        ).toList();
+        )).toList();
 
         var y = 0;
         var x = input.map[0].indexOf('.');
@@ -96,10 +96,10 @@ public class Day22 extends AdventOfCode<Day22.Input> {
         System.out.println(String.join("\n", input.map));
         System.out.println(input.instructions);
 
-        var actions = Util.groups(
+        var actions = Arrays.stream(Util.groups(
                 input.instructions,
                 Pattern.compile("((\\d+|[LR]))")
-        ).toList();
+        )).toList();
 
         var y = 0;
         var x = input.map[0].indexOf('.');

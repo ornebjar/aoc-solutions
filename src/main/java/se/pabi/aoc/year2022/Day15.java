@@ -14,7 +14,7 @@ import static java.lang.Math.*;
 
 public class Day15 extends AdventOfCode<Stream<Day15.Link>> {
 
-    record Link(Point sensor, Point beacon) {
+    public record Link(Point sensor, Point beacon) {
         int dist() {
             return abs(sensor.x - beacon.x) + abs(sensor.y - beacon.y);
         }
@@ -45,7 +45,7 @@ public class Day15 extends AdventOfCode<Stream<Day15.Link>> {
         Pattern pattern = Pattern.compile("^Sensor at x=(.*), y=(.*): closest beacon is at x=(.*), y=(.*)$");
         return input.lines()
                 .map(line -> {
-                    int[] v = Util.groups(line, pattern).mapToInt(Integer::parseInt).toArray();
+                    int[] v = Arrays.stream(Util.groups(line, pattern)).mapToInt(Integer::parseInt).toArray();
                     return new Link(new Point(v[0], v[1]), new Point(v[2], v[3]));
                 });
     }
@@ -72,7 +72,7 @@ public class Day15 extends AdventOfCode<Stream<Day15.Link>> {
         if (list.size() != 1) {
             throw new IllegalStateException("Did not manage to reduce the range list");
         }
-        return list.get(0).count() - bx.size();
+        return list.getFirst().count() - bx.size();
     }
 
     @Override
@@ -91,7 +91,7 @@ public class Day15 extends AdventOfCode<Stream<Day15.Link>> {
             });
             List<Range> list = Range.reduce(on);
             if (list.size() > 1) {
-                return BigInteger.valueOf(list.get(0).to + 1)
+                return BigInteger.valueOf(list.getFirst().to + 1)
                         .multiply(BigInteger.valueOf(4000000))
                         .add(BigInteger.valueOf(target));
             }

@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 public class Day16 extends AdventOfCode<Day16.Valve[]> {
 
-    static class Valve {
+    public static class Valve {
         final String name;
         int rate;
 
@@ -29,21 +29,10 @@ public class Day16 extends AdventOfCode<Day16.Valve[]> {
 
     @Override
     public Valve[] input(String input) {
-//        input = """
-//                Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
-//                Valve BB has flow rate=13; tunnels lead to valves CC, AA
-//                Valve CC has flow rate=2; tunnels lead to valves DD, BB
-//                Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
-//                Valve EE has flow rate=3; tunnels lead to valves FF, DD
-//                Valve FF has flow rate=0; tunnels lead to valves EE, GG
-//                Valve GG has flow rate=0; tunnels lead to valves FF, HH
-//                Valve HH has flow rate=22; tunnel leads to valve GG
-//                Valve II has flow rate=0; tunnels lead to valves AA, JJ
-//                Valve JJ has flow rate=21; tunnel leads to valve II""";
         Pattern pattern = Pattern.compile("^Valve (.*) has flow rate=(.*); tunnels? leads? to valves? (.*)$");
         List<String[]> neighbours = new ArrayList<>();
         Valve[] valves = input.lines().map(line -> {
-            String[] groups = Util.groups(line, pattern).toArray(String[]::new);
+            String[] groups = Util.groups(line, pattern);
             neighbours.add(groups[2].split(", "));
             return new Valve(groups[0], Integer.parseInt(groups[1]));
         }).toArray(Valve[]::new);

@@ -3,6 +3,7 @@ package se.pabi.aoc.year2022;
 import se.pabi.aoc.base.AdventOfCode;
 import se.pabi.aoc.util.Util;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -55,7 +56,7 @@ public class Day19 extends AdventOfCode<Stream<Day19.Blueprint>> {
                         "Each geode robot costs (.*) ore and (.*) obsidian.");
         return input.lines()
                 .map(line -> Util.groups(line, pattern))
-                .map(groups -> groups.mapToInt(Integer::parseInt).toArray())
+                .map(groups -> Arrays.stream(groups).mapToInt(Integer::parseInt).toArray())
                 .map(Blueprint::new);
     }
 

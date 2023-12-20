@@ -20,7 +20,7 @@ public class Day8 extends AdventOfCode<Day8.Input> {
     public Input input(String input) {
         String[] split = input.split("\n\n");
         Pattern pattern = Pattern.compile("^(.*) = \\((.*), (.*)\\)$");
-        return new Input(split[0], split[1].lines().map(line -> Util.groups(line, pattern).toArray(String[]::new))
+        return new Input(split[0], split[1].lines().map(line -> Util.groups(line, pattern))
                 .collect(Collectors.toMap(parts -> parts[0], parts -> new Pair(parts[1], parts[2]))));
     }
 

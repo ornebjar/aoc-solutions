@@ -5,18 +5,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Util {
     private Util() {}
 
-    public static Stream<String> groups(String line, Pattern pattern) {
+    public static String[] groups(String line, Pattern pattern) {
         Matcher matcher = pattern.matcher(line);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Input is broken");
         }
         return IntStream.rangeClosed(1, matcher.groupCount())
-                .mapToObj(matcher::group);
+                .mapToObj(matcher::group).toArray(String[]::new);
     }
 
     public static int gcd(int a, int b) {
