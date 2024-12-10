@@ -12,7 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 public abstract class AdventOfCode<T> {
 
@@ -21,17 +24,78 @@ public abstract class AdventOfCode<T> {
         String year = extractLastNumber(pkg.getName());
         String day = extractLastNumber(getClass().getSimpleName());
 
-        T i1 = input(readInput(year, day));
-        long startTime = System.currentTimeMillis();
-        Object r1 = part1(i1);
-        long timeTaken = System.currentTimeMillis() - startTime;
-        System.out.printf("Part 1 in %s: %s%n", millisToString(timeTaken), r1);
+        execute(Part.ONE, year, day);
+        execute(Part.TWO, year, day);
+    }
 
-        T i2 = input(readInput(year, day));
-        startTime = System.currentTimeMillis();
-        Object r2 = part2(i2);
-        timeTaken = System.currentTimeMillis() - startTime;
-        System.out.printf("Part 2 in %s: %s%n", millisToString(timeTaken), r2);
+    private enum Part {
+        ONE, TWO;
+
+        String pretty() {
+            return switch (this) {
+                case ONE -> "Part 1";
+                case TWO -> "Part 2";
+            };
+        }
+    }
+
+    private void execute(Part part, String year, String day) {
+        T input = trackProgress(input(readInput(year, day)));
+        long startTime = System.currentTimeMillis();
+        Object result = switch (part) {
+            case ONE -> part1(input);
+            case TWO -> part2(input);
+        };
+        long timeTaken = System.currentTimeMillis() - startTime;
+        System.out.printf("\r%s in [%s]: %s%n", part.pretty(), millisToString(timeTaken), result);
+    }
+
+    public boolean progressTracking() {
+        return true;
+    }
+
+    private T trackProgress(T input) {
+        if (progressTracking() && input instanceof Stream<?> stream) {
+            var list = stream.toList();
+            AtomicInteger counter = new AtomicInteger();
+            AtomicInteger previous = new AtomicInteger(-1);
+            //noinspection unchecked
+            return (T) list.stream().peek(_ ->
+                    previous.getAndUpdate(prev -> printProgress(counter, prev, list))
+            );
+        }
+        return input;
+    }
+
+    private static final int BASE = 8;
+    private static final int BOXES = 13;
+
+    private static int printProgress(AtomicInteger counter, int previous, List<?> list) {
+        int currentCount = counter.incrementAndGet();
+        int percent = BOXES * BASE * currentCount / list.size();
+        if (previous < percent) {
+            StringBuilder sb = new StringBuilder("\r");
+            for (int i = 0; i < BOXES; i++) {
+                int diff = percent - i * BASE;
+                if (diff >= BASE) {
+                    // 0: 0x2588 = █
+                    sb.append((char) 0x2588);
+                } else if (diff > 0) {
+                    // 7: 0x2589 = ▉
+                    // 6: 0x258A = ▊
+                    // 5: 0x258B = ▋
+                    // 4: 0x258C = ▌
+                    // 3: 0x258D = ▍
+                    // 2: 0x258E = ▎
+                    // 1: 0x258F = ▏
+                    sb.append((char) (0x2590 - diff));
+                } else {
+                    sb.append(' ');
+                }
+            }
+            System.out.printf("%s▏%2s%%", sb, 100 * currentCount / (list.size() + 1));
+        }
+        return percent;
     }
 
     private static String extractLastNumber(String string) {
@@ -40,7 +104,8 @@ public abstract class AdventOfCode<T> {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(
             "0.00",
-            new DecimalFormatSymbols(Locale.US));
+            new DecimalFormatSymbols(Locale.US)
+    );
 
     private static String millisToString(long ms) {
         return ms >= 1000

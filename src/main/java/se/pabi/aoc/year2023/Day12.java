@@ -12,6 +12,11 @@ public class Day12 extends AdventOfCode<Stream<Day12.Input>> {
     }
 
     @Override
+    public boolean progressTracking() {
+        return false;
+    }
+
+    @Override
     public Stream<Input> input(String input) {
         return input.lines().map(line -> {
             String[] split = line.split(" ");
