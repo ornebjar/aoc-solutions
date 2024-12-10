@@ -19,7 +19,7 @@ public class Day19 extends AdventOfCode<Stream<Day19.Blueprint>> {
         }
     }
 
-    record Blueprint(
+    public record Blueprint(
             int id,
             int[][] cost
     ) {
@@ -39,16 +39,6 @@ public class Day19 extends AdventOfCode<Stream<Day19.Blueprint>> {
 
     @Override
     public Stream<Blueprint> input(String input) {
-//        input = "Blueprint 1: " +
-//                "Each ore robot costs 4 ore. " +
-//                "Each clay robot costs 2 ore. " +
-//                "Each obsidian robot costs 3 ore and 14 clay. " +
-//                "Each geode robot costs 2 ore and 7 obsidian.\n" +
-//                "Blueprint 2: " +
-//                "Each ore robot costs 2 ore. " +
-//                "Each clay robot costs 3 ore. " +
-//                "Each obsidian robot costs 3 ore and 8 clay. " +
-//                "Each geode robot costs 3 ore and 12 obsidian.";
         Pattern pattern = Pattern.compile(
                 "Blueprint (.*): Each ore robot costs (.*) ore. " +
                         "Each clay robot costs (.*) ore. " +
@@ -75,15 +65,9 @@ public class Day19 extends AdventOfCode<Stream<Day19.Blueprint>> {
     }
 
     private int calc(Blueprint blueprint, int minutes) {
-
         int[] robots = new int[]{1, 0, 0, 0};
         int[] resources = new int[]{0, 0, 0, 0};
-
-        int score = calc(blueprint, minutes, resources, robots, 0);
-
-        System.out.printf("#%s: %s%n", blueprint.id, score);
-
-        return score;
+        return calc(blueprint, minutes, resources, robots, 0);
     }
 
     private int calc(Blueprint blueprint, int minute, int[] resources, int[] robots, int top) {
