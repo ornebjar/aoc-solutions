@@ -85,7 +85,7 @@ public class Day17 extends AdventOfCode<Day17.Input> {
         }
     }
 
-    record Input(int[] winds, Rock[] rocks) {
+    public record Input(int[] winds, Rock[] rocks) {
     }
 
 

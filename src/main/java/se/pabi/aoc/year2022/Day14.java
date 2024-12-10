@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class Day14 extends AdventOfCode<Day14.Cave> {
 
-    record Cave(Set<Point> stones) {
+    public record Cave(Set<Point> stones) {
         void drop(int abyss, Point stone) {
             while (stone.y < abyss) {
                 stone.y++;

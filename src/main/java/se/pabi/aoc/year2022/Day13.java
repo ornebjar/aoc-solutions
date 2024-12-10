@@ -83,7 +83,7 @@ public class Day13 extends AdventOfCode<Day13.Pair[]> {
         }
     }
 
-    record Pair(Li left, Li right) {
+    public record Pair(Li left, Li right) {
         Pair(List<String> pair) {
             this(new Li(), new Li());
             left.scan(pair.get(0), 0);

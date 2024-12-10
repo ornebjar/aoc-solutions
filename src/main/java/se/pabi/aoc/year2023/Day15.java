@@ -27,7 +27,7 @@ public class Day15 extends AdventOfCode<String[]> {
             if (x.charAt(x.length()-1) == '-') {
                 String name = x.substring(0, x.length() - 1);
                 int hash = hash(name);
-                var box = boxes.computeIfPresent(hash, (i, l) -> {
+                var box = boxes.computeIfPresent(hash, (_, l) -> {
                     l.remove(name);
                     return l;
                 });
@@ -37,7 +37,7 @@ public class Day15 extends AdventOfCode<String[]> {
             } else {
                 String[] split = x.split("=");
                 String name = split[0];
-                boxes.computeIfAbsent(hash(name), i -> new LinkedHashMap<>())
+                boxes.computeIfAbsent(hash(name), _ -> new LinkedHashMap<>())
                         .put(name, Integer.parseInt(split[1]));
             }
         });

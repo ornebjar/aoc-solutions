@@ -32,7 +32,7 @@ public class Day3 extends AdventOfCode<String> {
                         }
                         case "do" -> enabled.set(true);
                         case "don't" -> enabled.set(false);
-                    };
+                    }
                     return 0;
                 })
                 .sum();

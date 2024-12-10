@@ -8,7 +8,7 @@ import static java.lang.Math.abs;
 
 public class Day12 extends AdventOfCode<Day12.River> {
 
-    record River(Pos[][] map, int w, int h, Pos start, Pos goal) {
+    public record River(Pos[][] map, int w, int h, Pos start, Pos goal) {
     }
 
     static class Pos {

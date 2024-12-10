@@ -84,7 +84,7 @@ public class Day17 extends AdventOfCode<int[][]> {
         open.add(new Node(new Pos(0, 1), 1, 1, input[1][0], goal.x + goal.y - 1, start));
         while (!open.isEmpty()) {
             var current = open.poll();
-            var dirMap = closed.computeIfAbsent(current.p, p -> new HashMap<>());
+            var dirMap = closed.computeIfAbsent(current.p, _ -> new HashMap<>());
             var key = current.key();
             var closedPrev = dirMap.get(key);
             if (goal.equals(current.p)) {

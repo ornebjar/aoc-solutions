@@ -11,28 +11,14 @@ public class Day6 extends AdventOfCode<char[][]> {
 
     @Override
     public char[][] input(String input) {
-//        input = """
-//                ....#.....
-//                .........#
-//                ..........
-//                ..#.......
-//                .......#..
-//                ..........
-//                .#..^.....
-//                ........#.
-//                #.........
-//                ......#...
-//                """;
         return input.lines()
                 .map(String::toCharArray)
                 .toArray(char[][]::new);
     }
 
     record Point(int x, int y) {
-        Point add(Point other) {
-            return new Point(x + other.x, y + other.y);
-        }
         Point rot90() {
+            //noinspection SuspiciousNameCombination
             return new Point(-y, x);
         }
     }
@@ -43,7 +29,7 @@ public class Day6 extends AdventOfCode<char[][]> {
         Point pos = findStart(input);
         Point dir = getDir(input[pos.y()][pos.x()]);
 
-        Set<Point> visited = new HashSet();
+        Set<Point> visited = new HashSet<>();
 
         while (inside(input, pos)) {
             visited.add(pos);

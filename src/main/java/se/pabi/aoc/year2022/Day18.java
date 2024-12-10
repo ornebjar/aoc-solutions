@@ -14,7 +14,7 @@ import static java.util.function.Predicate.not;
 
 public class Day18 extends AdventOfCode<Set<Day18.Cube>> {
 
-    record Cube(int x, int y, int z) {
+    public record Cube(int x, int y, int z) {
         Cube translate(int dx, int dy, int dz) {
             return new Cube(x + dx, y + dy, z + dz);
         }

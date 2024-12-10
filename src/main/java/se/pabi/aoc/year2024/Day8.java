@@ -43,7 +43,7 @@ public class Day8 extends AdventOfCode<char[][]> {
                     Antenna antenna = Antenna.from(input[y][x]);
                     Set<Point> points = antennas.computeIfAbsent(
                             antenna,
-                            k -> new HashSet<>()
+                            _ -> new HashSet<>()
                     );
 
                     Point next = new Point(x, y);
@@ -78,7 +78,7 @@ public class Day8 extends AdventOfCode<char[][]> {
                     Antenna antenna = Antenna.from(input[y][x]);
                     Set<Point> points = antennas.computeIfAbsent(
                             antenna,
-                            k -> new HashSet<>()
+                            _ -> new HashSet<>()
                     );
 
                     Point next = new Point(x, y);

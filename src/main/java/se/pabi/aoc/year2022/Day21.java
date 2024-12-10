@@ -78,26 +78,26 @@ public class Day21 extends AdventOfCode<Stream<String>> {
             Answer lAnswer = monkeys.get(left).solve(monkeys);
             Answer rAnswer = monkeys.get(right).solve(monkeys);
 
-            if (lAnswer instanceof Known lKnown && rAnswer instanceof Known rKnown) {
-                return new Known(operate(lKnown.value, rKnown.value));
+            if (lAnswer instanceof Known(BigInteger value) && rAnswer instanceof Known(BigInteger value1)) {
+                return new Known(operate(value, value1));
             }
 
-            if (lAnswer instanceof Question lQuestion && rAnswer instanceof Known rKnown) {
+            if (lAnswer instanceof Question lQuestion && rAnswer instanceof Known(BigInteger value)) {
                 return new Question(target -> switch (operator) {
-                    case '+' -> lQuestion.apply(target.subtract(rKnown.value)); // l + r = target  =>  l = target - r
-                    case '-' -> lQuestion.apply(target.add(rKnown.value));      // l - r = target  =>  l = target + r
-                    case '*' -> lQuestion.apply(target.divide(rKnown.value));   // l * r = target  =>  l = target / r
-                    case '/' -> lQuestion.apply(target.multiply(rKnown.value)); // l / r = target  =>  l = target * r
+                    case '+' -> lQuestion.apply(target.subtract(value)); // l + r = target  =>  l = target - r
+                    case '-' -> lQuestion.apply(target.add(value));      // l - r = target  =>  l = target + r
+                    case '*' -> lQuestion.apply(target.divide(value));   // l * r = target  =>  l = target / r
+                    case '/' -> lQuestion.apply(target.multiply(value)); // l / r = target  =>  l = target * r
                     default -> throw new IllegalArgumentException("Unknown operator " + operator);
                 });
             }
 
-            if (lAnswer instanceof Known lKnown && rAnswer instanceof Question rQuestion) {
+            if (lAnswer instanceof Known(BigInteger value) && rAnswer instanceof Question rQuestion) {
                 return new Question(target -> switch (operator) {
-                    case '+' -> rQuestion.apply(target.subtract(lKnown.value)); // l + r = target  =>  r = target - l
-                    case '-' -> rQuestion.apply(lKnown.value.subtract(target)); // l - r = target  =>  r = l - target
-                    case '*' -> rQuestion.apply(target.divide(lKnown.value));   // l * r = target  =>  r = target / l
-                    case '/' -> rQuestion.apply(lKnown.value.divide(target));   // l / r = target  =>  r = l / target
+                    case '+' -> rQuestion.apply(target.subtract(value)); // l + r = target  =>  r = target - l
+                    case '-' -> rQuestion.apply(value.subtract(target)); // l - r = target  =>  r = l - target
+                    case '*' -> rQuestion.apply(target.divide(value));   // l * r = target  =>  r = target / l
+                    case '/' -> rQuestion.apply(value.divide(target));   // l / r = target  =>  r = l / target
                     default -> throw new IllegalArgumentException("Unknown operator " + operator);
                 });
             }
@@ -167,11 +167,11 @@ public class Day21 extends AdventOfCode<Stream<String>> {
         Answer left = monkeys.get(monkeys.get(root.left).name).solve(monkeys);
         Answer right = monkeys.get(monkeys.get(root.right).name).solve(monkeys);
 
-        if (left instanceof Known known && right instanceof Question question) {
-            return question.apply(known.value);
+        if (left instanceof Known(BigInteger value) && right instanceof Question question) {
+            return question.apply(value);
         }
-        if (left instanceof Question question && right instanceof Known known) {
-            return question.apply(known.value);
+        if (left instanceof Question question && right instanceof Known(BigInteger value)) {
+            return question.apply(value);
         }
 
         return 0;

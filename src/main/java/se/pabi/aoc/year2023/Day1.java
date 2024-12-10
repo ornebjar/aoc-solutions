@@ -92,7 +92,7 @@ public class Day1 extends AdventOfCode<Stream<String>> {
                 return;
             }
             char c = word.charAt(0);
-            next.computeIfAbsent(c, k -> new Num()).put(word.substring(1), i);
+            next.computeIfAbsent(c, _ -> new Num()).put(word.substring(1), i);
         }
     }
 

@@ -70,8 +70,8 @@ public class Day18 extends AdventOfCode<Stream<String[]>> {
                 HLine line = input.dir == 1
                         ? new HLine(pos.x, pos.y, pos.y + input.steps)
                         : new HLine(pos.x, pos.y - input.steps, pos.y);
-                linesByStart.computeIfAbsent(line.sy, k -> new ArrayList<>()).add(line);
-                linesByEnd.computeIfAbsent(line.ey, k -> new ArrayList<>()).add(line);
+                linesByStart.computeIfAbsent(line.sy, _ -> new ArrayList<>()).add(line);
+                linesByEnd.computeIfAbsent(line.ey, _ -> new ArrayList<>()).add(line);
             }
             if (pos.y < min) {
                 min = pos.y;

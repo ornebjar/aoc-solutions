@@ -101,9 +101,9 @@ public class Day20 extends AdventOfCode<IntStream> {
             nodes.get(i).prev = nodes.get(i-1);
             nodes.get(i-1).next = nodes.get(i);
         }
-        Node last = nodes.get(nodes.size() - 1);
-        nodes.get(0).prev = last;
-        last.next = nodes.get(0);
+        Node last = nodes.getLast();
+        nodes.getFirst().prev = last;
+        last.next = nodes.getFirst();
     }
 
     private static BigInteger groveCoordinates(List<Node> result) {

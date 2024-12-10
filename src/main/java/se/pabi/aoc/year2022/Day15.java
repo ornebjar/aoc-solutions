@@ -36,7 +36,7 @@ public class Day15 extends AdventOfCode<Stream<Day15.Link>> {
                             merged.add(new Range(last.from, Math.max(last.to, next.to)));
                         }
                         return merged;
-                    }, (m, n) -> m);
+                    }, (m, _) -> m);
         }
     }
 

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class Day11 extends AdventOfCode<Day11.Monkey[]> {
 
-    static final class Monkey {
+    public static final class Monkey {
         final List<BigInteger> items;
         final Function<BigInteger, BigInteger> op;
         final Function<BigInteger, Integer> to;

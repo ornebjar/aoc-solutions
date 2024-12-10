@@ -44,7 +44,7 @@ public class Day16 extends AdventOfCode<Day16.Valve[]> {
                     .forEach(valve -> v.neighbours.put(valve, 1));
         }
         for (Valve valve : valves) {
-            LinkedList<Valve> open = new LinkedList(valve.neighbours.keySet());
+            LinkedList<Valve> open = new LinkedList<>(valve.neighbours.keySet());
             int dist = 1;
             Valve next;
             while (!open.isEmpty()) {
@@ -77,7 +77,7 @@ public class Day16 extends AdventOfCode<Day16.Valve[]> {
             return 0;
         }
 
-        return time * current.rate + IntStream.range(0, paths.size()).map(i -> {
+        return time * current.rate + IntStream.range(0, paths.size()).map(_ -> {
             Valve next = paths.pop();
 
             int dist = current.neighbours.get(next);
@@ -104,13 +104,13 @@ public class Day16 extends AdventOfCode<Day16.Valve[]> {
 
         int moveScore = time1 * current1.rate;
 
-        IntStream intStream = time1 >= time2 ? IntStream.range(0, paths.size()).map(i -> {
+        IntStream intStream = time1 >= time2 ? IntStream.range(0, paths.size()).map(_ -> {
             Valve next = paths.pop();
             int dist = current1.neighbours.get(next);
             int score = calc2(next, current2, paths, time1 - dist - 1, time2);
             paths.add(next);
             return score;
-        }) : IntStream.range(0, paths.size()).map(i -> {
+        }) : IntStream.range(0, paths.size()).map(_ -> {
             Valve next = paths.pop();
             int dist = current2.neighbours.get(next);
             int score = calc2(next, current1, paths, time2 - dist - 1, time1);
