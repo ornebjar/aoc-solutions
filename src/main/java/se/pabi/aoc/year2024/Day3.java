@@ -1,6 +1,6 @@
 package se.pabi.aoc.year2024;
 
-import se.pabi.aoc.base.AdventOfCode;
+import se.phet.aoc.AdventOfCode;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;

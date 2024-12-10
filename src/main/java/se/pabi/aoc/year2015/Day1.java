@@ -1,6 +1,6 @@
 package se.pabi.aoc.year2015;
 
-import se.pabi.aoc.base.AdventOfCode;
+import se.phet.aoc.AdventOfCode;
 
 public class Day1 extends AdventOfCode<String> {
     @Override

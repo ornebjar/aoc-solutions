@@ -1,6 +1,6 @@
 package se.pabi.aoc.year2024;
 
-import se.pabi.aoc.base.AdventOfCode;
+import se.phet.aoc.AdventOfCode;
 
 public class Day4 extends AdventOfCode<char[][]> {
 

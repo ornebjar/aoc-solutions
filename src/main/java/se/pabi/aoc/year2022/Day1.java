@@ -1,6 +1,6 @@
 package se.pabi.aoc.year2022;
 
-import se.pabi.aoc.base.AdventOfCode;
+import se.phet.aoc.AdventOfCode;
 
 import java.util.Arrays;
 import java.util.Comparator;

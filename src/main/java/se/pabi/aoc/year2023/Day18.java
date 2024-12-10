@@ -1,6 +1,6 @@
 package se.pabi.aoc.year2023;
 
-import se.pabi.aoc.base.AdventOfCode;
+import se.phet.aoc.AdventOfCode;
 import se.pabi.aoc.util.Util;
 
 import java.util.ArrayList;
