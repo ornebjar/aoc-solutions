@@ -54,7 +54,7 @@ public class Day11 extends AdventOfCode<Day11.Monkey[]> {
     }
 
     public Monkey[] input(String input) {
-        return Arrays.stream(input.split("\r\n\r\n")).map(Monkey::new).toArray(Monkey[]::new);
+        return Arrays.stream(input.split("\n\n")).map(Monkey::new).toArray(Monkey[]::new);
     }
 
     public static final BigInteger THREE = BigInteger.valueOf(3);

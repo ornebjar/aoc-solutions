@@ -53,8 +53,6 @@ public class Day4 extends AdventOfCode<Stream<Day4.Card>> {
             }
         }
 
-        System.out.println(Arrays.toString(copies));
-
         return Arrays.stream(copies).asLongStream().sum();
     }
 }

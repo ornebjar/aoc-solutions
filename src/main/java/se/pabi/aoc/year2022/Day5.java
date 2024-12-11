@@ -12,10 +12,10 @@ public class Day5 extends AdventOfCode<Day5.Input> {
 
     public record Input(Stream<String> lines, List<Stack<String>> stacks) {
         public Input(String input) {
-            this(input.split("\r\n\r\n")[1].lines(), parseStacks(input));
+            this(input.split("\n\n")[1].lines(), parseStacks(input));
         }
         private static List<Stack<String>> parseStacks(String input) {
-            String[] parts = input.split("\r\n\r\n");
+            String[] parts = input.split("\n\n");
             System.out.println(parts[0]);
             List<String> start = parts[0].lines().toList();
             int startHeight = start.size() - 1;
