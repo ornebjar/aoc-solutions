@@ -1,36 +1,27 @@
 package se.pabi.aoc.year2024;
 
+import se.pabi.aoc.util.IntPoint;
 import se.phet.aoc.AdventOfCode;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Day15 extends AdventOfCode<Stream<Day15.Point>> {
+public class Day15 extends AdventOfCode<Stream<IntPoint>> {
 
-    private static final Map<Character, Point> DIRECTIONS = Map.of(
-            '^', new Point(0, -1),
-            'v', new Point(0, 1),
-            '<', new Point(-1, 0),
-            '>', new Point(1, 0)
+    private static final Map<Character, IntPoint> DIRECTIONS = Map.of(
+            '^', new IntPoint(0, -1),
+            'v', new IntPoint(0, 1),
+            '<', new IntPoint(-1, 0),
+            '>', new IntPoint(1, 0)
     );
 
     private boolean[][] walls;
-    private Point position;
-    private Set<Point> boxes;
-
-    public record Point(int x, int y) {
-        public Point add(int dx, int dy) {
-            return new Point(x + dx, y + dy);
-        }
-
-        public Point add(Point other) {
-            return add(other.x, other.y);
-        }
-    }
+    private IntPoint position;
+    private Set<IntPoint> boxes;
 
     @Override
-    public Stream<Point> input(String input) {
+    public Stream<IntPoint> input(String input) {
         var parts = input.split("\n\n");
         var map = parts[0].lines().map(String::toCharArray).toArray(char[][]::new);
         boxes = new HashSet<>();
@@ -43,10 +34,10 @@ public class Day15 extends AdventOfCode<Stream<Day15.Point>> {
                         walls[y][x] = true;
                         break;
                     case 'O':
-                        boxes.add(new Point(x, y));
+                        boxes.add(new IntPoint(x, y));
                         break;
                     case '@':
-                        position = new Point(x, y);
+                        position = new IntPoint(x, y);
                         break;
                 }
             }
@@ -58,15 +49,15 @@ public class Day15 extends AdventOfCode<Stream<Day15.Point>> {
     }
 
     @Override
-    public Object part1(Stream<Point> input) {
+    public Object part1(Stream<IntPoint> input) {
         input.filter(dir -> push(position, dir))
                 .forEach(dir -> position = position.add(dir));
-        return boxes.stream().mapToInt(p -> p.x + p.y * 100).sum();
+        return boxes.stream().mapToInt(p -> p.x() + p.y() * 100).sum();
     }
 
-    private boolean push(Point from, Point direction) {
+    private boolean push(IntPoint from, IntPoint direction) {
         var to = from.add(direction);
-        if (walls[to.y][to.x]) {
+        if (walls[to.y()][to.x()]) {
             return false;
         }
         if (boxes.contains(to)) {
@@ -82,7 +73,7 @@ public class Day15 extends AdventOfCode<Stream<Day15.Point>> {
     }
 
     @Override
-    public Object part2(Stream<Point> input) {
+    public Object part2(Stream<IntPoint> input) {
         var newMap = new boolean[walls.length][];
 
         for (int y = 0; y < walls.length; y++) {
@@ -93,27 +84,27 @@ public class Day15 extends AdventOfCode<Stream<Day15.Point>> {
         }
 
         walls = newMap;
-        position = new Point(position.x * 2, position.y);
+        position = new IntPoint(position.x() * 2, position.y());
         boxes = boxes.stream()
-                .map(p -> new Point(p.x * 2, p.y))
+                .map(p -> new IntPoint(p.x() * 2, p.y()))
                 .collect(Collectors.toSet());
 
         input.filter(dir -> push2(position, dir))
                 .forEach(dir -> position = position.add(dir));
 
-        return boxes.stream().mapToInt(p -> p.x + p.y * 100).sum();
+        return boxes.stream().mapToInt(p -> p.x() + p.y() * 100).sum();
     }
 
-    private boolean push2(Point from, Point direction) {
-        Set<Point> slide = new HashSet<>();
-        LinkedHashSet<Point> check = new LinkedHashSet<>();
+    private boolean push2(IntPoint from, IntPoint direction) {
+        Set<IntPoint> slide = new HashSet<>();
+        LinkedHashSet<IntPoint> check = new LinkedHashSet<>();
 
-        if (direction.x == 0) {
+        if (direction.x() == 0) {
             check.add(from.add(direction));
-            if (boxes.contains(from.add(-1, direction.y))) {
-                check.add(from.add(-1, direction.y));
+            if (boxes.contains(from.add(-1, direction.y()))) {
+                check.add(from.add(-1, direction.y()));
             }
-        } else if (direction.x == -1) {
+        } else if (direction.x() == -1) {
             if (boxes.contains(from.add(-2, 0))) {
                 check.add(from.add(-2, 0));
             } else {
@@ -125,31 +116,31 @@ public class Day15 extends AdventOfCode<Stream<Day15.Point>> {
 
         while (!check.isEmpty()) {
             var p = check.removeFirst();
-            if (walls[p.y][p.x]) {
+            if (walls[p.y()][p.x()]) {
                 return false;
             }
             if (boxes.contains(p)) {
-                if (direction.x == 0) {
-                    if (boxes.contains(p.add(-1, direction.y))) {
-                        check.add(p.add(-1, direction.y));
+                if (direction.x() == 0) {
+                    if (boxes.contains(p.add(-1, direction.y()))) {
+                        check.add(p.add(-1, direction.y()));
                     }
                     check.add(p.add(direction));
-                    check.add(p.add(1, direction.y));
-                } else if (direction.x == -1) {
+                    check.add(p.add(1, direction.y()));
+                } else if (direction.x() == -1) {
                     if (boxes.contains(p.add(-2, 0))) {
                         check.add(p.add(-2, 0));
                     } else {
                         check.add(p.add(-1, 0));
                     }
                 } else {
-                    check.add(p.add(direction.x * 2, 0));
+                    check.add(p.add(direction.x() * 2, 0));
                 }
                 slide.add(p);
             }
         }
 
         boxes.removeAll(slide);
-        for (Point p : slide) {
+        for (IntPoint p : slide) {
             boxes.add(p.add(direction));
         }
         return true;

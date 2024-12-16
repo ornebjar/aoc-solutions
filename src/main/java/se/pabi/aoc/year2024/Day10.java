@@ -1,5 +1,6 @@
 package se.pabi.aoc.year2024;
 
+import se.pabi.aoc.util.IntPoint;
 import se.phet.aoc.AdventOfCode;
 
 import java.util.*;
@@ -14,18 +15,13 @@ public class Day10 extends AdventOfCode<int[][]> {
                 .toArray(int[][]::new);
     }
 
-    record Point(int x, int y) {
-        boolean inside(int[][] grid) {
-            return x >= 0 && x < grid[0].length && y >= 0 && y < grid.length;
-        }
-        Stream<Point> neighbors(int[][] grid) {
-            return Stream.of(
-                    new Point(x - 1, y),
-                    new Point(x + 1, y),
-                    new Point(x, y - 1),
-                    new Point(x, y + 1)
-            ).filter(p -> p.inside(grid));
-        }
+    private static Stream<IntPoint> neighbors(IntPoint point, int[][] grid) {
+        return Stream.of(
+                new IntPoint(point.x() - 1, point.y()),
+                new IntPoint(point.x() + 1, point.y()),
+                new IntPoint(point.x(), point.y() - 1),
+                new IntPoint(point.x(), point.y() + 1)
+        ).filter(p -> p.x() >= 0 && p.x() < grid[0].length && p.y() >= 0 && p.y() < grid.length);
     }
 
     @Override
@@ -35,33 +31,33 @@ public class Day10 extends AdventOfCode<int[][]> {
                 .sum();
     }
 
-    private static Set<Point> findStarts(int[][] input) {
-        Set<Point> starts = new HashSet<>();
+    private static Set<IntPoint> findStarts(int[][] input) {
+        Set<IntPoint> starts = new HashSet<>();
         for (int y = 0; y < input.length; y++) {
             for (int x = 0; x < input[y].length; x++) {
                 if (input[y][x] == 0) {
-                    starts.add(new Point(x, y));
+                    starts.add(new IntPoint(x, y));
                 }
             }
         }
         return starts;
     }
 
-    private static long countTrails(int[][] input, Point start) {
-        Set<Point> open = new HashSet<>();
+    private static long countTrails(int[][] input, IntPoint start) {
+        Set<IntPoint> open = new HashSet<>();
         open.add(start);
-        Set<Point> visited = new HashSet<>();
+        Set<IntPoint> visited = new HashSet<>();
         while (!open.isEmpty()) {
-            Point current = open.iterator().next();
+            IntPoint current = open.iterator().next();
             open.remove(current);
             visited.add(current);
-            current.neighbors(input).filter(p -> input[p.y][p.x] - input[current.y][current.x] == 1).forEach(p -> {
+            neighbors(current, input).filter(p -> input[p.y()][p.x()] - input[current.y()][current.x()] == 1).forEach(p -> {
                 if (!visited.contains(p)) {
                     open.add(p);
                 }
             });
         }
-        return visited.stream().filter(point -> input[point.y][point.x] == 9).count();
+        return visited.stream().filter(point -> input[point.y()][point.x()] == 9).count();
     }
 
     @Override
@@ -71,25 +67,25 @@ public class Day10 extends AdventOfCode<int[][]> {
                 .sum();
     }
 
-    private static long countAllTrails(int[][] input, Point start) {
-        Map<Point, Long> open = new HashMap<>();
+    private static long countAllTrails(int[][] input, IntPoint start) {
+        Map<IntPoint, Long> open = new HashMap<>();
         open.put(start, 1L);
-        Map<Point, Long> result = new HashMap<>();
+        Map<IntPoint, Long> result = new HashMap<>();
 
         while (!open.isEmpty()) {
             var currentEntry = open.entrySet().stream()
-                    .min(Comparator.comparingInt(e -> input[e.getKey().y][e.getKey().x]))
+                    .min(Comparator.comparingInt(e -> input[e.getKey().y()][e.getKey().x()]))
                     .orElseThrow();
             var current = currentEntry.getKey();
             var value = currentEntry.getValue();
-            current.neighbors(input).filter(p -> input[p.y][p.x] - input[current.y][current.x] == 1).forEach(p -> {
+            neighbors(current, input).filter(p -> input[p.y()][p.x()] - input[current.y()][current.x()] == 1).forEach(p -> {
                 long newValue = value;
                 if (open.containsKey(p)) {
                     newValue += open.get(p);
                 }
                 open.put(p, newValue);
             });
-            if (input[current.y][current.x] == 9) {
+            if (input[current.y()][current.x()] == 9) {
                 result.put(current, value);
             }
             open.remove(current);

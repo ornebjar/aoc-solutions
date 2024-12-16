@@ -1,25 +1,22 @@
 package se.pabi.aoc.year2024;
 
+import se.pabi.aoc.util.IntPoint;
 import se.phet.aoc.AdventOfCode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Day14 extends AdventOfCode<Stream<Day14.Robot>> {
+import static se.pabi.aoc.year2024.Day14.*;
 
-    record Point(int x, int y) {
-        public Point add(Point other) {
-            return new Point(x + other.x, y + other.y);
-        }
-        public Point multiply(int factor) {
-            return new Point(x * factor, y * factor);
-        }
-    }
+public class Day14 extends AdventOfCode<Stream<Robot>> {
 
-    public record Robot(Point position, Point direction) {
+    public record Robot(IntPoint position, IntPoint direction) {
     }
 
     @Override
@@ -29,8 +26,8 @@ public class Day14 extends AdventOfCode<Stream<Day14.Robot>> {
                 .map(pattern::matcher)
                 .filter(Matcher::matches)
                 .map(matcher -> new Robot(
-                        new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2))),
-                        new Point(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)))
+                        new IntPoint(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2))),
+                        new IntPoint(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)))
                 ));
     }
 
@@ -38,18 +35,18 @@ public class Day14 extends AdventOfCode<Stream<Day14.Robot>> {
     public Object part1(Stream<Robot> input) {
         var width = 101;
         var height = 103;
-        Map<Point, Integer> map = new HashMap<>();
+        Map<IntPoint, Integer> map = new HashMap<>();
         input.forEach(robot -> {
             var position = robot.position.add(robot.direction.multiply(100));
-            var x = mod0to(position.x, width);
-            var y = mod0to(position.y, height);
-            map.merge(new Point(signum(x, width), signum(y, height)), 1, Integer::sum);
+            var x = mod0to(position.x(), width);
+            var y = mod0to(position.y(), height);
+            map.merge(new IntPoint(signum(x, width), signum(y, height)), 1, Integer::sum);
         });
         return Stream.of(
-                new Point(1, 1),
-                new Point(1, -1),
-                new Point(-1, 1),
-                new Point(-1, -1)
+                new IntPoint(1, 1),
+                new IntPoint(1, -1),
+                new IntPoint(-1, 1),
+                new IntPoint(-1, -1)
         ).mapToInt(q -> map.getOrDefault(q, 0)).reduce(1, (a, b) -> a * b);
     }
 
@@ -77,7 +74,7 @@ public class Day14 extends AdventOfCode<Stream<Day14.Robot>> {
             int finalI = i;
             var formation = robots.stream().map(robot ->{
                 var next = robot.position.add(robot.direction.multiply(finalI));
-                return new Point(mod0to(next.x, 101), mod0to(next.y, 103));
+                return new IntPoint(mod0to(next.x(), 101), mod0to(next.y(), 103));
             } ).collect(Collectors.toSet());
 
 
@@ -85,7 +82,7 @@ public class Day14 extends AdventOfCode<Stream<Day14.Robot>> {
             for (int y = 0; y < 103; y++) {
                 StringBuilder line = new StringBuilder();
                 for (int x = 0; x < 101; x++) {
-                    line.append(formation.contains(new Point(x, y)) ? '#' : '·');
+                    line.append(formation.contains(new IntPoint(x, y)) ? '#' : '·');
                 }
                 lines.add(line.toString());
             }

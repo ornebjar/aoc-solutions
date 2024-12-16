@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Day5 extends AdventOfCode<Day5.D5> {
 
-    public record Rule(int a, int b) {
+    record Rule(int a, int b) {
     }
 
     public record D5(List<Rule> rules, List<List<Integer>> values) {
@@ -14,38 +14,6 @@ public class Day5 extends AdventOfCode<Day5.D5> {
 
     @Override
     public D5 input(String input) {
-
-//        input = """
-//                47|53
-//                97|13
-//                97|61
-//                97|47
-//                75|29
-//                61|13
-//                75|53
-//                29|13
-//                97|29
-//                53|29
-//                61|53
-//                97|53
-//                61|29
-//                47|13
-//                75|47
-//                97|75
-//                47|61
-//                75|61
-//                47|29
-//                75|13
-//                53|13
-//
-//                75,47,61,53,29
-//                97,61,53,29,13
-//                75,29,13
-//                75,97,47,61,53
-//                61,13,29
-//                97,13,75,29,47
-//                """;
-
         var split = input.split("\n\n");
         var rules = split[0].lines()
                 .map(l -> {
@@ -95,22 +63,6 @@ public class Day5 extends AdventOfCode<Day5.D5> {
     }
 
     private static long middleSorted(List<Rule> rules, List<Integer> input) {
-
-//        List <Integer> line = new ArrayList<>(input);
-//        for (Rule rule : rules) {
-//            var a = line.indexOf(rule.a());
-//            var b = line.indexOf(rule.b());
-//
-//
-//            if (a == -1 || b == -1) {
-//                continue;
-//            }
-//            if (a > b) {
-//                line.set(a, rule.b());
-//                line.set(b, rule.a());
-//            }
-//        }
-
         var line = input.stream()
                 .sorted((o1, o2) -> {
                     for (Rule rule : rules) {
@@ -124,7 +76,6 @@ public class Day5 extends AdventOfCode<Day5.D5> {
                     return 0;
                 })
                 .toList();
-
         return line.get(line.size() / 2);
     }
 }

@@ -1,5 +1,6 @@
 package se.pabi.aoc.year2024;
 
+import se.pabi.aoc.util.IntPoint;
 import se.phet.aoc.AdventOfCode;
 
 import java.util.HashMap;
@@ -23,38 +24,33 @@ public class Day8 extends AdventOfCode<char[][]> {
         }
     }
 
-    record Point(int x, int y) {
-        boolean inside(char[][] input) {
-            return x >= 0 && x < input[0].length && y >= 0 && y < input.length;
-        }
-        Point add(Point other) {
-            return new Point(x + other.x, y + other.y);
-        }
+    private static boolean inside(char[][] input, IntPoint point) {
+        return point.x() >= 0 && point.x() < input[0].length && point.y() >= 0 && point.y() < input.length;
     }
 
     @Override
     public Object part1(char[][] input) {
-        Map<Antenna, Set<Point>> antennas = new HashMap<>();
-        Set<Point> antiNodes = new HashSet<>();
+        Map<Antenna, Set<IntPoint>> antennas = new HashMap<>();
+        Set<IntPoint> antiNodes = new HashSet<>();
 
         for (int y = 0; y < input.length; y++) {
             for (int x = 0; x < input[y].length; x++) {
                 if (input[y][x] != '.') {
                     Antenna antenna = Antenna.from(input[y][x]);
-                    Set<Point> points = antennas.computeIfAbsent(
+                    Set<IntPoint> points = antennas.computeIfAbsent(
                             antenna,
                             _ -> new HashSet<>()
                     );
 
-                    Point next = new Point(x, y);
+                    IntPoint next = new IntPoint(x, y);
 
-                    for (Point point : points) {
-                        Point antiNode = new Point(next.x + next.x - point.x, next.y + next.y - point.y);
-                        if (antiNode.inside(input)) {
+                    for (IntPoint point : points) {
+                        IntPoint antiNode = new IntPoint(next.x() + next.x() - point.x(), next.y() + next.y() - point.y());
+                        if (inside(input, antiNode)) {
                             antiNodes.add(antiNode);
                         }
-                        antiNode = new Point(point.x + point.x - next.x, point.y + point.y - next.y);
-                        if (antiNode.inside(input)) {
+                        antiNode = new IntPoint(point.x() + point.x() - next.x(), point.y() + point.y() - next.y());
+                        if (inside(input, antiNode)) {
                             antiNodes.add(antiNode);
                         }
                     }
@@ -69,30 +65,30 @@ public class Day8 extends AdventOfCode<char[][]> {
 
     @Override
     public Object part2(char[][] input) {
-        Map<Antenna, Set<Point>> antennas = new HashMap<>();
-        Set<Point> antiNodes = new HashSet<>();
+        Map<Antenna, Set<IntPoint>> antennas = new HashMap<>();
+        Set<IntPoint> antiNodes = new HashSet<>();
 
         for (int y = 0; y < input.length; y++) {
             for (int x = 0; x < input[y].length; x++) {
                 if (input[y][x] != '.') {
                     Antenna antenna = Antenna.from(input[y][x]);
-                    Set<Point> points = antennas.computeIfAbsent(
+                    Set<IntPoint> points = antennas.computeIfAbsent(
                             antenna,
                             _ -> new HashSet<>()
                     );
 
-                    Point next = new Point(x, y);
+                    IntPoint next = new IntPoint(x, y);
 
-                    for (Point point : points) {
-                        Point jump = new Point(next.x - point.x, next.y - point.y);
-                        Point antiNode = next;
-                        while (antiNode.inside(input)) {
+                    for (IntPoint point : points) {
+                        IntPoint jump = new IntPoint(next.x() - point.x(), next.y() - point.y());
+                        IntPoint antiNode = next;
+                        while (inside(input, antiNode)) {
                             antiNodes.add(antiNode);
                             antiNode = antiNode.add(jump);
                         }
-                        jump = new Point(point.x - next.x, point.y - next.y);
+                        jump = new IntPoint(point.x() - next.x(), point.y() - next.y());
                         antiNode = point;
-                        while (antiNode.inside(input)) {
+                        while (inside(input, antiNode)) {
                             antiNodes.add(antiNode);
                             antiNode = antiNode.add(jump);
                         }
