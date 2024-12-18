@@ -18,4 +18,9 @@ public record IntPoint(int x, int y) {
         return new IntPoint(-y, x);
     }
 
+    public static IntPoint parse(String s) {
+        String[] parts = s.split(",");
+        return new IntPoint(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+    }
+
 }
