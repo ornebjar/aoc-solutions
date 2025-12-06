@@ -60,11 +60,6 @@ public class Day14 extends AdventOfCode<Stream<Robot>> {
     }
 
     @Override
-    public boolean progressTracking() {
-        return false;
-    }
-
-    @Override
     public Object part2(Stream<Robot> input) {
         List<Robot> robots = input.toList();
 
@@ -96,7 +91,7 @@ public class Day14 extends AdventOfCode<Stream<Robot>> {
         return 0;
     }
 
-    private static void print(List<String> lines) {
+    private void print(List<String> lines) {
         lines.add(" ".repeat(lines.getFirst().length()));
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < lines.size(); y+=2) {
@@ -109,7 +104,7 @@ public class Day14 extends AdventOfCode<Stream<Robot>> {
             }
             sb.append('\n');
         }
-        System.out.print(sb);
+        log(sb.toString());
     }
 
 }
